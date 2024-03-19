@@ -9,6 +9,10 @@ const registrosSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    valor: {
+        type: String,
+        required: true
+    },
     justificativa: {
         type: String
     }
