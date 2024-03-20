@@ -1,15 +1,28 @@
 import dbUsuarios from "../../database/models/usuarios.js";
 
 class addRegisterService {
-    async execute({ email, descricao, contaContabil, valor }) {
+    async execute({ email, descricao, contaContabil, valorEmConta }) {
         try{
 
             const currentRegister = await dbUsuarios.findOne({ email })
 
+            if(currentRegister == null) {
+                const addRegister = await dbUsuarios.create({
+                    email,
+                    registros: {
+                        descricao,
+                        contaContabil,
+                        valorEmConta
+                    }
+                })
+                
+                return { success: true, message: 'Novo registro adicionado com sucesso' }
+            }
+
             const newRegister = {
                 descricao,
                 contaContabil,
-                valor
+                valorEmConta
             }
 
             currentRegister.registros.push(newRegister)

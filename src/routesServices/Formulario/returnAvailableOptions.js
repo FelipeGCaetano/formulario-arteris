@@ -1,21 +1,27 @@
+import _ from "lodash"
 import dbUsuarios from "../../database/models/usuarios.js"
 
 class avaiableOpitionsService {
     async execute({ email }) {
-
-        const options = await dbUsuarios.findOne({ email })
-
-        const description = []
-        const accountingAccount = []
-
-        for(let option of options.registros) {
-            if(!description.includes(option.descricao)) {
-                description.push(option.descricao)
+        try{
+            const options = await dbUsuarios.findOne({ email })
+    
+            const groupByDesc = _.groupBy(options.registros, 'descricao')
+    
+            const availableOptions = {}
+            for (let desc in groupByDesc) {
+                availableOptions[desc] = groupByDesc[desc].map(registro => {
+                    return {
+                        contaContabil: registro.contaContabil,
+                        valor: registro.valor.toFixed(2)
+                      }
+                })
             }
-            accountingAccount.push(option.contaContabil)
+    
+            return availableOptions
+        } catch (err) {
+            return {message: err.message}
         }
-
-        return {description, accountingAccount}
 
     }
 }
