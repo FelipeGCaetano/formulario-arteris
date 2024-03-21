@@ -46,7 +46,7 @@ async function populate(){
                     {
                         descricao: registro["DESCRIÇÃO "],
                         contaContabil: registro["Conta Contábil"],
-                        valor: registro.Valor
+                        valorEmConta: registro.Valor
                     }
                 ]
             })
@@ -54,7 +54,7 @@ async function populate(){
             const novoRegistro = {
                 descricao: registro["DESCRIÇÃO "],
                 contaContabil: registro["Conta Contábil"],
-                valor: registro.Valor
+                valorEmConta: registro.Valor
             }
 
             user.registros.push(novoRegistro)

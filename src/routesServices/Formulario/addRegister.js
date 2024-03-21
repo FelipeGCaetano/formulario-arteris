@@ -3,6 +3,7 @@ import dbUsuarios from "../../database/models/usuarios.js";
 class addRegisterService {
     async execute({ email, descricao, contaContabil, valorEmConta }) {
         try{
+            valorEmConta = Number(valorEmConta)
 
             const currentRegister = await dbUsuarios.findOne({ email })
 
@@ -10,9 +11,9 @@ class addRegisterService {
                 const addRegister = await dbUsuarios.create({
                     email,
                     registros: {
-                        descricao,
-                        contaContabil,
-                        valorEmConta
+                        descricao: descricao,
+                        contaContabil: contaContabil,
+                        valorEmConta: valorEmConta
                     }
                 })
                 
@@ -20,9 +21,9 @@ class addRegisterService {
             }
 
             const newRegister = {
-                descricao,
-                contaContabil,
-                valorEmConta
+                descricao: descricao,
+                contaContabil: contaContabil,
+                valorEmConta: valorEmConta
             }
 
             currentRegister.registros.push(newRegister)

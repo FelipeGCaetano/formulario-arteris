@@ -9,16 +9,18 @@ formsRouter.get('/', async (request, response) => {
     try {
         const email = request.query.email
 
-        if(!email) return response.json({ message: 'E-mail não informado' }).status(400)
+        if(!email) return response.status(400).json({ message: 'E-mail não informado' })
 
         const availableOptions = new avaiableOpitionsService()
 
         const options = await availableOptions.execute({ email })
 
-        return response.json(options).status(200)
+        if(options.message) return response.status(400).json({ message })
+
+        return response.status(200).json(options)
 
     } catch (err) {
-        return response.json({message: err}).status(500)
+        return response.status(500).json({message: err})
     }
 })
 
@@ -27,16 +29,18 @@ formsRouter.post('/adicionar-registro', async (request, response) => {
 
         const {email, descricao, contaContabil, valorEmConta} = request.body
 
-        if(!email || !descricao || !contaContabil || !valorEmConta) return response.json({ message: 'Faltam parametros para adicionar novo registro.' }).status(400)
+        if(!email || !descricao || !contaContabil || !valorEmConta) return response.status(400).json({ message: 'Faltam parametros para adicionar novo registro.' })
 
         const addRegister = new addRegisterService()
 
         const add = await addRegister.execute({ email, descricao, contaContabil, valorEmConta })
 
-        return response.json(add).status(200)
+        if(add.success == false) return response.status(400).json({ success: false, message: add.message })
+
+        return response.status(201).json(add)
 
     } catch (err) {
-        return response.json({ message: err.message }).status(500)
+        return response.status(500).json({ message: err.message })
     }
 })
 
@@ -44,16 +48,18 @@ formsRouter.put('/justificativa', async (request, response) => {
     try{
         const { email, descricao, contaContabil, valorEmConta, valorAJustificar, mes, justificativa } = request.body
         
-        if(!email || !descricao || !contaContabil || !valorEmConta || !valorAJustificar || !mes || !justificativa) return response.json({ message: 'Faltam parametros para registrar a justificativa.' }).status(400)
+        if(!email || !descricao || !contaContabil || !valorEmConta || !valorAJustificar || !mes || !justificativa) return response.status(400).json({ message: 'Faltam parametros para registrar a justificativa.' })
 
         const addJustify = new addJustifyService()
 
         const add = await addJustify.execute({ email, descricao, contaContabil, valorEmConta, valorAJustificar, mes, justificativa })
 
-        return response.json(add).status(200)
+        if(add.success == false) return response.status(400).json({ success: false, message: add.message })
+
+        return response.status(201).json(add)
 
     } catch (err) {
-        return response.json({ message: err.message }).status(500)
+        return response.status(500).json({ message: err.message })
     }
 })
 
