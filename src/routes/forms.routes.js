@@ -1,6 +1,7 @@
 import { Router } from "express";
 import addJustifyService from "../routesServices/Formulario/addJustify.js";
 import addRegisterService from "../routesServices/Formulario/addRegister.js";
+import updateRegisterService from "../routesServices/Formulario/updateRegister.js";
 import avaiableOpitionsService from "../routesServices/Formulario/returnAvailableOptions.js";
 
 const formsRouter = Router()
@@ -63,5 +64,23 @@ formsRouter.put('/justificativa', async (request, response) => {
     }
 })
 
+formsRouter.put('/atualizar-registro', async (request, response) => {
+    try {
+        const {email, valoresAntigos, valoresNovos} = request.body
+
+        if(!email || !valoresAntigos || !valoresNovos) return response.status(400).json({ message: "Faltam parametros para atualizar o registro no banco." })
+
+        const updateRegister = new updateRegisterService()
+
+        const update = await updateRegister.execute({ email, valoresAntigos, valoresNovos })
+
+        if(update.success == false) return response.status(400).json({ success: false, message: update.message })
+
+        return response.status(201).json(update)
+
+    } catch (err) {
+        return response.status(500).json({ message: err.message })
+    }
+})
 
 export default formsRouter
