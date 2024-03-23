@@ -1,27 +1,58 @@
 import dbUsuarios from "../../database/models/usuarios.js"
+import ExcelJS from "exceljs"
+import { format } from "date-fns"
+import fs from 'fs'
 
 class addJustifyService {
     async execute({ email, descricao, contaContabil, valorEmConta, valorAJustificar, mes, justificativa }){
         try{
+            const workbook = new ExcelJS.Workbook();
 
-            const user = await dbUsuarios.findOne({email})
-            for(let registro of user.registros) {
+            const filePath = `./files/${format(new Date(), 'dd-MM-yyyy')}.xlsx`
 
-                if(registro.descricao == descricao && registro.contaContabil == contaContabil && registro.valor.toFixed(2) == valorEmConta) {
-                    registro.justificativa = justificativa
-                    registro.valorAJustificar = valorAJustificar
-                    registro.mes = mes
+            if(!fs.existsSync(filePath)) {
+                const worksheet = workbook.addWorksheet('Planilha1')
+
+                const cells = [
+                    [worksheet.getCell('A1'), "Email"],
+                    [worksheet.getCell('B1'), "DESCRIÇÃO"],
+                    [worksheet.getCell('C1'), "Conta Contábil"],
+                    [worksheet.getCell('D1'), "Valor"],
+                    [worksheet.getCell('E1'), "Valor Justificado"],
+                    [worksheet.getCell('F1'), "Mês"],
+                    [worksheet.getCell('G1'), "Justificativa"]
+                ]
+
+                for(let cell of cells) {
+                    cell[0].value = cell[1]
+                    cell[0].font = { color: { argb: 'FFFFFFFF' }, bold: true }
+                    cell[0].fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: '228B22' }}
                 }
+                
+                await workbook.xlsx.writeFile(filePath)
             }
 
-            const updateRegister = await dbUsuarios.updateOne(
-                {email},
-                {$set: {registros: user.registros}}
-            )
+            await workbook.xlsx.readFile(filePath)
 
-            if(updateRegister.modifiedCount == 0) {
-                return { success: false, message: 'Erro ao adicionar justificativa.' }
-            } 
+            const worksheet = workbook.getWorksheet('Planilha1');
+
+            let nextRow = worksheet.rowCount + 1;
+
+            const data = [
+                email, 
+                descricao, 
+                contaContabil, 
+                valorEmConta, 
+                valorAJustificar, 
+                mes, 
+                justificativa 
+            ]
+
+            data.forEach((value, index) => {
+                worksheet.getCell(`${String.fromCharCode(65 + index)}${nextRow}`).value = value
+            })
+
+            await workbook.xlsx.writeFile(filePath)
 
             return { success: true, message: 'Justificativa adicionada com sucesso' }
 

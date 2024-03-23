@@ -7,14 +7,12 @@ async function lerExcelParaJSON() {
     const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.readFile(filePath);
   
-    // Vamos supor que estamos lendo a primeira planilha
     const worksheet = workbook.getWorksheet(1);
   
     const data = [];
   
-    // Iterando sobre as linhas da planilha
     worksheet.eachRow((row, rowNumber) => {
-      if (rowNumber !== 1) { // Ignorar o cabeçalho (linha 1)
+      if (rowNumber !== 1) { 
         const rowData = {};
         row.eachCell((cell, colNumber) => {
           rowData[worksheet.getRow(1).getCell(colNumber).value] = cell.value;
