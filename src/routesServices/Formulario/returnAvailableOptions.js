@@ -6,6 +6,8 @@ class avaiableOpitionsService {
         try{
             const options = await dbUsuarios.findOne({ email })
 
+            if(options == null) return { success: false, message: `Nenhnum registro encontrado para o email: ${email}`}
+
             const groupByDesc = _.groupBy(options.registros, 'descricao')
 
             const availableOptions = {}

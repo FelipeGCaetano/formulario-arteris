@@ -16,7 +16,9 @@ formsRouter.get('/', async (request, response) => {
 
         const options = await availableOptions.execute({ email })
 
-        if(options.message) return response.status(400).json({ message })
+        if(options.success == false) {
+            return response.status(404).json({ message: options.message })
+        }
 
         return response.status(200).json(options)
 
