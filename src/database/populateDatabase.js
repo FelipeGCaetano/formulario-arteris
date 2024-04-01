@@ -43,7 +43,8 @@ async function populate(){
                 registros: [
                     {
                         descricao: registro["DESCRIÇÃO "],
-                        contaContabil: registro["Conta Contábil"],
+                        grupoDaConta: registro["Grupo da Conta"],
+                        conta: registro.Conta,
                         valorEmConta: registro.Valor
                     }
                 ]
@@ -51,7 +52,8 @@ async function populate(){
         } else {
             const novoRegistro = {
                 descricao: registro["DESCRIÇÃO "],
-                contaContabil: registro["Conta Contábil"],
+                grupoDaConta: registro["Grupo da Conta"],
+                conta: registro.Conta,
                 valorEmConta: registro.Valor
             }
 

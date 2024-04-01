@@ -4,7 +4,7 @@ import { format } from "date-fns"
 import fs from 'fs'
 
 class addJustifyService {
-    async execute({ email, descricao, contaContabil, valorEmConta, valorAJustificar, mes, justificativa }){
+    async execute({ email, descricao, grupoDaConta, conta, valorEmConta, valorAJustificar, mes, justificativa }){
         try{
             const workbook = new ExcelJS.Workbook();
 
@@ -16,11 +16,12 @@ class addJustifyService {
                 const cells = [
                     [worksheet.getCell('A1'), "Email"],
                     [worksheet.getCell('B1'), "DESCRIÇÃO"],
-                    [worksheet.getCell('C1'), "Conta Contábil"],
-                    [worksheet.getCell('D1'), "Valor"],
-                    [worksheet.getCell('E1'), "Valor Justificado"],
-                    [worksheet.getCell('F1'), "Mês"],
-                    [worksheet.getCell('G1'), "Justificativa"]
+                    [worksheet.getCell('C1'), "Grupo da Conta"],
+                    [worksheet.getCell('D1'), "Conta"],
+                    [worksheet.getCell('E1'), "Valor"],
+                    [worksheet.getCell('F1'), "Valor Justificado"],
+                    [worksheet.getCell('G1'), "Mês"],
+                    [worksheet.getCell('H1'), "Justificativa"]
                 ]
 
                 for(let cell of cells) {
@@ -41,11 +42,12 @@ class addJustifyService {
             const data = [
                 email, 
                 descricao, 
-                contaContabil, 
+                grupoDaConta, 
+                conta, 
                 valorEmConta, 
                 valorAJustificar, 
                 mes, 
-                justificativa 
+                justificativa
             ]
 
             data.forEach((value, index) => {

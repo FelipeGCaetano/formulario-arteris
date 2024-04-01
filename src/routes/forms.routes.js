@@ -49,13 +49,13 @@ formsRouter.post('/adicionar-registro', async (request, response) => {
 
 formsRouter.put('/justificativa', async (request, response) => {
     try{
-        const { email, descricao, contaContabil, valorEmConta, valorAJustificar, mes, justificativa } = request.body
+        const { email, descricao, grupoDaConta, conta, valorEmConta, valorAJustificar, mes, justificativa } = request.body
         
-        if(!email || !descricao || !contaContabil || !valorEmConta || !valorAJustificar || !mes || !justificativa) return response.status(400).json({ message: 'Faltam parametros para registrar a justificativa.' })
+        if(!email || !descricao || !grupoDaConta || !conta || !valorEmConta || !valorAJustificar || !mes || !justificativa) return response.status(400).json({ message: 'Faltam parametros para registrar a justificativa.' })
 
         const addJustify = new addJustifyService()
 
-        const add = await addJustify.execute({ email, descricao, contaContabil, valorEmConta, valorAJustificar, mes, justificativa })
+        const add = await addJustify.execute({ email, descricao, grupoDaConta, conta, valorEmConta, valorAJustificar, mes, justificativa })
 
         if(add.success == false) return response.status(400).json({ success: false, message: add.message })
 
